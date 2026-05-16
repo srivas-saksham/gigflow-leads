@@ -18,7 +18,7 @@ export const AuthLayout = ({ title, subtitle, children, footer }: AuthLayoutProp
       style={{ background: 'radial-gradient(ellipse at center top, rgba(245,158,11,0.06) 0%, transparent 70%)' }}
     />
 
-    <div className="w-full max-w-sm relative">
+    <div className="w-full max-w-md relative p-6 rounded-xl" style={{border: '1px solid var(--border)'}}>
       {/* Logo */}
       <div className="flex items-center gap-2 mb-8">
         <span className="w-6 h-6 rounded-md bg-[var(--amber)] flex items-center justify-center shrink-0">

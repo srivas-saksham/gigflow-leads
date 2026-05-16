@@ -9,7 +9,7 @@ export const HomeNav = () => (
       backdropFilter: 'blur(12px)',
     }}
   >
-    <div className="max-w-5xl mx-auto px-6 h-12 flex items-center justify-between">
+    <div className="max-w-7xl mx-auto px-6 h-12 flex items-center justify-between">
       <div className="flex items-center gap-2">
         <span className="w-5 h-5 rounded-md bg-[var(--amber)] flex items-center justify-center shrink-0">
           <svg width="9" height="9" viewBox="0 0 10 10" fill="none">

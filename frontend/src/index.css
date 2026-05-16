@@ -12,6 +12,7 @@
   --text-secondary:#a1a1a1;
   --text-muted:   #555;
   --amber:        #f59e0b;
+  --amber-selection:        #9f6502;
   --amber-dim:    rgba(245,158,11,0.12);
   --amber-border: rgba(245,158,11,0.25);
   --red-dim:      rgba(239,68,68,0.1);
@@ -43,7 +44,7 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
 /* Selection */
-::selection { background: var(--amber-dim); color: var(--amber); }
+::selection { background: var(--bg-overlay); color: var(--amber); }
 
 /* Focus */
 :focus-visible {
