@@ -35,7 +35,7 @@ export const SourceBadge = ({ source }: SourceBadgeProps) => {
   );
 };
 
-interface RoleBadgeProps { role: 'admin' | 'sales' }
+interface RoleBadgeProps { role: 'admin' | 'sales' | 'customer' }
 export const RoleBadge = ({ role }: RoleBadgeProps) => (
   <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold border mono tracking-widest uppercase ${
     role === 'admin'
