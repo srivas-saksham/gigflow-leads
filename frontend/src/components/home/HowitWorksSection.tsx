@@ -16,7 +16,7 @@ const steps = [
   },
 ];
 
-export const HowItWorksSection = () => (
+export const HowitWorksSection = () => (
   <section id="how-it-works" style={{ borderTop: '1px solid var(--border)' }}>
     <div className="max-w-5xl mx-auto px-6 py-20">
       <p className="text-[10px] text-[var(--amber)] font-semibold tracking-[0.15em] uppercase mb-4">How it works</p>
