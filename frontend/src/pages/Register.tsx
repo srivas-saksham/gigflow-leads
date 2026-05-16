@@ -10,7 +10,6 @@ const Register = () => {
     name: '',
     email: '',
     password: '',
-    role: 'sales' as 'admin' | 'sales',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -79,18 +78,6 @@ const Register = () => {
               required
               className="w-full bg-gray-900 border border-gray-800 text-white rounded-lg px-4 py-2.5 text-sm placeholder-gray-600 focus:outline-none focus:border-gray-600 transition-colors"
             />
-          </div>
-
-          <div>
-            <label className="block text-sm text-gray-400 mb-1.5">Role</label>
-            <select
-              value={form.role}
-              onChange={(e) => setForm({ ...form, role: e.target.value as 'admin' | 'sales' })}
-              className="w-full bg-gray-900 border border-gray-800 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-gray-600 transition-colors"
-            >
-              <option value="sales">Sales User</option>
-              <option value="admin">Admin</option>
-            </select>
           </div>
 
           <button

@@ -6,12 +6,17 @@ import {
   updateLead,
   deleteLead,
   exportCSV,
+  submitLead,
 } from '../controllers/leadController';
 import { protect } from '../middleware/authMiddleware';
 import { adminOnly } from '../middleware/roleMiddleware';
 
 const router = Router();
 
+// public — homepage contact form
+router.post('/submit', submitLead);
+
+// protected routes
 router.use(protect);
 
 router.get('/export', adminOnly, exportCSV);

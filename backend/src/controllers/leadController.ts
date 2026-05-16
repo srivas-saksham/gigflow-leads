@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import Lead from '../models/Lead';
 import { AuthRequest } from '../types/index';
 
@@ -134,6 +134,36 @@ export const exportCSV = async (req: AuthRequest, res: Response): Promise<void> 
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', 'attachment; filename=leads.csv');
     res.status(200).send(csv);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// public endpoint — no auth, leads come from the homepage contact form
+export const submitLead = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { name, email, message } = req.body;
+
+    if (!name || !email) {
+      res.status(400).json({ message: 'Name and email are required' });
+      return;
+    }
+
+    // system user id placeholder — public leads have no createdBy user
+    // we use a hardcoded ObjectId-like value to satisfy the schema
+    const { Types } = await import('mongoose');
+    const systemId = new Types.ObjectId('000000000000000000000000');
+
+    const lead = await Lead.create({
+      name,
+      email,
+      status: 'new',
+      source: 'website',
+      createdBy: systemId,
+      ...(message && { notes: message }),
+    });
+
+    res.status(201).json({ message: 'Thanks! We will be in touch soon.', lead });
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
