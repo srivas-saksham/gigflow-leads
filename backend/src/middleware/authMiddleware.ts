@@ -14,7 +14,7 @@ export const protect = (req: AuthRequest, res: Response, next: NextFunction): vo
     const token = authHeader.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
       id: string;
-      role: 'admin' | 'sales';
+      role: 'admin' | 'sales' | 'customer';
     };
 
     req.user = { id: decoded.id, role: decoded.role };

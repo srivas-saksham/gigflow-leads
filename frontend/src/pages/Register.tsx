@@ -24,7 +24,8 @@ const Register = () => {
     try {
       const res = await api.post('/api/auth/register', form);
       login(res.data.token, res.data.user);
-      navigate('/dashboard');
+      // Customers always go to home
+      navigate('/');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Registration failed');
     } finally {
@@ -34,13 +35,21 @@ const Register = () => {
 
   return (
     <AuthLayout
-      title="Create account"
-      subtitle="Set up your GigFlow workspace"
+      title="Create your account"
+      subtitle="Join GigFlow to track your interest and stay updated."
       footer={
-        <p className="text-xs text-[var(--text-muted)]">
-          Already have an account?{' '}
-          <Link to="/login" className="text-[var(--amber)] hover:underline">Sign in</Link>
-        </p>
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-xs text-[var(--text-muted)]">
+            Already have an account?{' '}
+            <Link to="/login" className="text-[var(--amber)] hover:underline">Sign in</Link>
+          </p>
+          <Link
+            to="/"
+            className="text-xs text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
+          >
+            ← Back to home
+          </Link>
+        </div>
       }
     >
       <form onSubmit={handleSubmit} className="space-y-4">

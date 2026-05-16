@@ -6,8 +6,10 @@ import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
+  const { isAuthenticated, user } = useAuth();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (user?.role === 'customer') return <Navigate to="/" replace />;
+  return <>{children}</>;
 };
 
 const App = () => {

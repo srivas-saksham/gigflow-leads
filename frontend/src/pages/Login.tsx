@@ -24,7 +24,12 @@ const Login = () => {
     try {
       const res = await api.post('/api/auth/login', form);
       login(res.data.token, res.data.user);
-      navigate('/dashboard');
+      // Redirect based on role
+      if (res.data.user.role === 'customer') {
+        navigate('/');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Invalid credentials');
     } finally {
@@ -35,12 +40,20 @@ const Login = () => {
   return (
     <AuthLayout
       title="Sign in"
-      subtitle="Enter your credentials to access the dashboard"
+      subtitle="Enter your credentials to access your account"
       footer={
-        <p className="text-xs text-[var(--text-muted)]">
-          No account?{' '}
-          <Link to="/register" className="text-[var(--amber)] hover:underline">Create one</Link>
-        </p>
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-xs text-[var(--text-muted)]">
+            No account?{' '}
+            <Link to="/register" className="text-[var(--amber)] hover:underline">Create one</Link>
+          </p>
+          <Link
+            to="/"
+            className="text-xs text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
+          >
+            ← Back to home
+          </Link>
+        </div>
       }
     >
       <form onSubmit={handleSubmit} className="space-y-4">

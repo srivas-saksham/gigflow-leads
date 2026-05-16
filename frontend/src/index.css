@@ -29,6 +29,11 @@ html {
   text-rendering: optimizeLegibility;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 48px; /* matches your h-12 navbar */
+}
+
 body {
   font-family: 'Geist', sans-serif;
   background-color: var(--bg-base);

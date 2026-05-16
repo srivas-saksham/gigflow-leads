@@ -139,7 +139,7 @@ export const HeroSection = () => (
         {/* ── Right: How it works — vertical pipeline ── */}
         <div>
           {/* Header */}
-          <div className="mb-6">
+          <div className="mb-6" id="how-it-works">
             <p
               className="text-[10px] font-semibold tracking-[0.18em] uppercase mb-1"
               style={{ color: 'var(--amber)' }}

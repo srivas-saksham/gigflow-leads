@@ -12,7 +12,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     if (!name || !email || !password) { res.status(400).json({ message: 'All fields are required' }); return; }
     const existing = await User.findOne({ email });
     if (existing) { res.status(409).json({ message: 'Email already in use' }); return; }
-    const user = await User.create({ name, email, password, role: 'sales' });
+    // Always force role to 'customer' regardless of request body
+    const user = await User.create({ name, email, password, role: 'customer' });
     const token = signToken(user._id.toString(), user.role);
     res.status(201).json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
   } catch { res.status(500).json({ message: 'Server error' }); }
@@ -54,7 +55,7 @@ export const createStaffUser = async (req: Request, res: Response): Promise<void
 
 export const listUsers = async (req: Request, res: Response): Promise<void> => {
   try {
-    const users = await User.find({}).select('-password').sort({ createdAt: -1 });
+    const users = await User.find({ role: { $in: ['admin', 'sales'] } }).select('-password').sort({ createdAt: -1 });
     res.status(200).json({
       users: users.map((u) => ({
         id: u._id,

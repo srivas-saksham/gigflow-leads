@@ -8,3 +8,11 @@ export const adminOnly = (req: AuthRequest, res: Response, next: NextFunction): 
   }
   next();
 };
+
+export const staffOnly = (req: AuthRequest, res: Response, next: NextFunction): void => {
+  if (req.user?.role !== 'admin' && req.user?.role !== 'sales') {
+    res.status(403).json({ message: 'Staff access required' });
+    return;
+  }
+  next();
+};

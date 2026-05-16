@@ -9,15 +9,16 @@ import {
   submitLead,
 } from '../controllers/leadController';
 import { protect } from '../middleware/authMiddleware';
-import { adminOnly } from '../middleware/roleMiddleware';
+import { adminOnly, staffOnly } from '../middleware/roleMiddleware';
 
 const router = Router();
 
 // public — homepage contact form
 router.post('/submit', submitLead);
 
-// protected routes
+// protected routes — staff only (admin + sales), customers blocked
 router.use(protect);
+router.use(staffOnly);
 
 router.get('/export', adminOnly, exportCSV);
 router.get('/', getLeads);

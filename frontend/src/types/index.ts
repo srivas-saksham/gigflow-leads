@@ -2,7 +2,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'sales';
+  role: 'admin' | 'sales' | 'customer';
 }
 
 export interface Lead {
