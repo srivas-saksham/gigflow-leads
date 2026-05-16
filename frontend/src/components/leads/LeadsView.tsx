@@ -68,7 +68,7 @@ export const LeadsView = ({ isAdmin }: LeadsViewProps) => {
             </Button>
           )}
           <Button variant="primary" size="sm" onClick={openCreate}>
-            <PlusIcon /> Add lead
+            <PlusIcon /> Add Lead
           </Button>
         </div>
       </div>
@@ -90,6 +90,7 @@ export const LeadsView = ({ isAdmin }: LeadsViewProps) => {
         isAdmin={isAdmin}
         onEdit={openEdit}
         onDelete={handleDelete}
+        onRefresh={refetch}
       />
 
       {/* Pagination */}

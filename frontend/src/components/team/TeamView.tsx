@@ -1,79 +1,72 @@
-import { useState } from 'react';
-import { Input, Select } from '../ui/Input';
+import { useState, useEffect, useCallback } from 'react';
+import { TeamTable } from './TeamTable';
+import { TeamModal } from './TeamModal';
 import { Button } from '../ui/Button';
-import { Alert } from '../ui/Alert';
-import { CredentialCard } from './CredentialCard';
+import type { StaffUser } from './TeamTable';
 import api from '../../utils/api';
 
-interface CreatedStaff { name: string; email: string; password: string; role: string }
-
-const defaultForm = { name: '', email: '', password: '', role: 'sales' as 'admin' | 'sales' };
+const PlusIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+    <path d="M12 5v14M5 12h14" />
+  </svg>
+);
 
 export const TeamView = () => {
-  const [form, setForm] = useState(defaultForm);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [created, setCreated] = useState<CreatedStaff | null>(null);
+  const [users, setUsers] = useState<StaffUser[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editUser, setEditUser] = useState<StaffUser | null>(null);
 
-  const set = (key: keyof typeof form) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
-      setForm((f) => ({ ...f, [key]: e.target.value }));
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
-    setError('');
     try {
-      const res = await api.post('/api/auth/staff', form);
-      setCreated({ name: res.data.user.name, email: res.data.user.email, password: form.password, role: res.data.user.role });
-      setForm(defaultForm);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to create account');
+      const res = await api.get('/api/auth/users');
+      setUsers(res.data.users);
+    } catch {
+      // noop
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  useEffect(() => { fetchUsers(); }, [fetchUsers]);
+
+  const openCreate = () => { setEditUser(null); setModalOpen(true); };
+  const openEdit = (user: StaffUser) => { setEditUser(user); setModalOpen(true); };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Delete this team member? This cannot be undone.')) return;
+    try { await api.delete(`/api/auth/users/${id}`); fetchUsers(); } catch { /* noop */ }
   };
 
+  const admins = users.filter((u) => u.role === 'admin').length;
+  const sales = users.filter((u) => u.role === 'sales').length;
+
   return (
-    <div className="max-w-sm">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-base font-semibold text-[var(--text-primary)] tracking-tight">Create staff account</h1>
-        <p className="text-xs text-[var(--text-muted)] mt-0.5 leading-relaxed">
-          Add a new admin or sales user. Credentials are shared manually.
-        </p>
+    <>
+      <div className="flex items-start justify-between gap-4 mb-5">
+        <div>
+          <h1 className="text-base font-semibold text-[var(--text-primary)] tracking-tight">Team</h1>
+          {!loading && (
+            <p className="text-xs text-[var(--text-muted)] mt-0.5 mono">
+              {admins} admin{admins !== 1 ? 's' : ''}, {sales} sales
+            </p>
+          )}
+          {loading && <div className="h-3 w-24 rounded bg-[var(--bg-raised)] animate-pulse mt-1" />}
+        </div>
+        <Button variant="primary" size="sm" onClick={openCreate}>
+          <PlusIcon /> Add member
+        </Button>
       </div>
 
-      {/* Credential display */}
-      {created && <CredentialCard credentials={created} onDismiss={() => setCreated(null)} />}
+      <TeamTable users={users} loading={loading} onEdit={openEdit} onDelete={handleDelete} />
 
-      {/* Error */}
-      {error && <div className="mb-4"><Alert variant="error" onDismiss={() => setError('')}>{error}</Alert></div>}
-
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Input label="Full name" id="staff-name" placeholder="Jane Smith" value={form.name} onChange={set('name')} required />
-        <Input label="Email" id="staff-email" type="email" placeholder="jane@company.com" value={form.email} onChange={set('email')} required />
-        <div>
-          <Input
-            label="Temporary password"
-            id="staff-password"
-            type="text"
-            placeholder="Set a strong password"
-            value={form.password}
-            onChange={set('password')}
-            required
-          />
-          <p className="text-[10px] text-[var(--text-muted)] mt-1">Shown once. Copy before submitting.</p>
-        </div>
-        <Select label="Role" id="staff-role" value={form.role} onChange={set('role')}>
-          <option value="sales">Sales user</option>
-          <option value="admin">Admin</option>
-        </Select>
-        <Button type="submit" variant="primary" loading={loading} className="w-full justify-center">
-          Create account
-        </Button>
-      </form>
-    </div>
+      <TeamModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSuccess={fetchUsers}
+        editUser={editUser}
+      />
+    </>
   );
 };

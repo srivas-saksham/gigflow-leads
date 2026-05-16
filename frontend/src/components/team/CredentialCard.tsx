@@ -50,7 +50,7 @@ export const CredentialCard = ({ credentials, onDismiss }: CredentialCardProps) 
       </div>
 
       {/* Credentials */}
-      <div className="divide-y" style={{ divideColor: 'var(--border)' }}>
+      <div className="divide-y divide-[var(--border)]">
         {rows.map(({ label, value, mono }) => (
           <div key={label} className="flex items-center gap-4 px-4 py-2.5" style={{ background: 'var(--bg-surface)' }}>
             <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider w-16 shrink-0">{label}</span>
