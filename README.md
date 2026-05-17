@@ -1,5 +1,9 @@
 # GigFlow — Smart Leads Dashboard
 
+**Live:** https://gigflow-leads.vercel.app · **API:** https://gigflow-leads-api.onrender.com · **Loom Demo:** https://www.loom.com/share/374d0e6f54ec4c50b9bfec4222904d45
+
+> Built by Saksham Srivastava · ServiceHive Full Stack Internship Assignment · May 2026
+
 A full-stack lead management application built as a ServiceHive internship assignment. Built with the MERN stack, fully typed in TypeScript end-to-end.
 
 ## Tech Stack
