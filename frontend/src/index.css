@@ -64,6 +64,10 @@ body {
   line-height: 1.5;
 }
 
+img{
+  user-select: none;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }

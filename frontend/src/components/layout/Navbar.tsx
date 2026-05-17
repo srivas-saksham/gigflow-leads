@@ -25,7 +25,7 @@ const useOpenLeads = () => {
       .get('/api/leads?status=new&limit=1')
       .then((res) => setCount(res.data.pagination.total))
       .catch(() => setCount(null));
-  }, [statsVersion]); // re-runs on every status change
+  }, [statsVersion]);
 
   return count;
 };
@@ -34,6 +34,8 @@ export const Navbar = () => {
   const { user, logout } = useAuth();
   const time = useClock();
   const openLeads = useOpenLeads();
+
+  const logoSrc = '/assets/logo-trans.png';
 
   const timeStr = time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   const dateStr = time.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
@@ -56,13 +58,13 @@ export const Navbar = () => {
         {/* Left — wordmark + back link */}
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2.5">
-            <span className="w-5 h-5 rounded-md bg-[var(--amber)] flex items-center justify-center">
-              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                <circle cx="5" cy="5" r="3" fill="#080808" />
-                <circle cx="5" cy="5" r="1" fill="#080808" />
-              </svg>
-            </span>
-            <span className="text-sm font-semibold tracking-tight text-[var(--text-primary)]">GigFlow</span>
+            <img
+              src={logoSrc}
+              alt="GigFlow"
+              draggable={false}
+              className="w-6 h-6 rounded-md object-cover shrink-0"
+            />
+            <span className="text-md font-semibold tracking-tight text-[var(--text-primary)]">GigFlow</span>
           </div>
 
           <div className="w-px h-4 bg-[var(--border)]" />
@@ -110,7 +112,6 @@ export const Navbar = () => {
               <LogOut size={13} />
               <span className="hidden sm:inline">Sign out</span>
             </button>
-            
           </div>
         )}
       </div>
@@ -126,13 +127,13 @@ export const Navbar = () => {
           {/* Left — wordmark + homepage */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <span className="w-5 h-5 rounded-md bg-[var(--amber)] flex items-center justify-center shrink-0">
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                  <circle cx="5" cy="5" r="3" fill="#080808" />
-                  <circle cx="5" cy="5" r="1" fill="#080808" />
-                </svg>
-              </span>
-              <span className="text-sm font-semibold tracking-tight text-[var(--text-primary)]">GigFlow</span>
+              <img
+                src={logoSrc}
+                alt="GigFlow"
+                draggable={false}
+                className="w-6 h-6 rounded-md object-cover shrink-0"
+              />
+              <span className="text-md font-semibold tracking-tight text-[var(--text-primary)]">GigFlow</span>
             </div>
 
             <div className="w-px h-4 bg-[var(--border)]" />

@@ -20,6 +20,8 @@ export const HomeNav = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const logoSrc ='/assets/logo-trans.png';
+
   useEffect(() => {
     if (!dropdownOpen) return;
     const handler = (e: MouseEvent) => {
@@ -45,13 +47,13 @@ export const HomeNav = () => {
 
         {/* Wordmark */}
         <div className="flex items-center gap-2">
-          <span className="w-5 h-5 rounded-md bg-[var(--amber)] flex items-center justify-center shrink-0">
-            <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
-              <circle cx="5" cy="5" r="3" fill="#080808" />
-              <circle cx="5" cy="5" r="1" fill="#080808" />
-            </svg>
-          </span>
-          <span className="text-sm font-semibold tracking-tight text-[var(--text-primary)]">GigFlow</span>
+          <img
+            src={logoSrc}
+            alt="GigFlow"
+            draggable={false}
+            className="w-6 h-6 rounded-md object-cover shrink-0"
+          />
+          <span className="text-md font-semibold tracking-tight text-[var(--text-primary)]">GigFlow</span>
         </div>
 
         {/* Desktop nav links */}

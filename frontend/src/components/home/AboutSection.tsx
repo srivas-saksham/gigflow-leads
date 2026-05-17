@@ -1,3 +1,5 @@
+import { FileText, CheckCircle2, ExternalLink } from 'lucide-react'
+
 const techStack = [
   { category: 'Frontend', items: ['React 19', 'TypeScript', 'Vite', 'Tailwind CSS v4', 'React Router v7', 'Axios'] },
   { category: 'Backend', items: ['Node.js', 'Express.js', 'TypeScript', 'Mongoose', 'JWT Auth', 'bcryptjs'] },
@@ -119,6 +121,39 @@ export const AboutSection = () => (
                 </svg>
               </div>
             </a>
+
+            {/* Quick links */}
+            <div className="flex items-center justify-evenly gap-3 mt-3">
+              <a
+                href="https://github.com/srivas-saksham/gigflow-leads/blob/main/API.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-sm transition-colors"
+                style={{ color: 'rgba(0,0,0,0.5)', textDecoration: 'none' }}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = '#0f0700')}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = 'rgba(0,0,0,0.5)')}
+              >
+                <FileText size={14} strokeWidth={2} />
+                API Documentation
+                <ExternalLink size={12} strokeWidth={1} />
+              </a>
+
+              <span style={{ color: 'rgba(0,0,0,0.2)' }}>·</span>
+
+              <a
+                href="https://github.com/srivas-saksham/gigflow-leads/blob/main/WHAT_I_BUILT.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-sm transition-colors"
+                style={{ color: 'rgba(0,0,0,0.5)', textDecoration: 'none' }}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = '#0f0700')}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = 'rgba(0,0,0,0.5)')}
+              >
+                <CheckCircle2 size={14} strokeWidth={2} />
+                What I Built
+                <ExternalLink size={12} strokeWidth={1} />
+              </a>
+            </div>
 
             {/* Caption */}
             <p className="text-[11px] leading-relaxed text-center" style={{ color: 'rgba(0,0,0,0.45)' }}>
