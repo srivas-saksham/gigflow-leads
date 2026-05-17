@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db';
 import authRoutes from './routes/authRoutes';
 import leadRoutes from './routes/leadRoutes';
+import { errorHandler } from './middleware/errorMiddleware';
 
 dotenv.config();
 
@@ -19,6 +20,9 @@ app.use('/api/leads', leadRoutes);
 app.get('/health', (_, res) => {
   res.status(200).json({ status: 'ok' });
 });
+
+// Centralized error handling middleware — must be after all routes
+app.use(errorHandler);
 
 connectDB().then(() => {
   app.listen(PORT, () => {

@@ -1,8 +1,33 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import Lead from '../models/Lead';
 import { AuthRequest } from '../types/index';
 
-export const createLead = async (req: AuthRequest, res: Response): Promise<void> => {
+// Helper: escape a CSV cell value (RFC 4180)
+const csvCell = (value: string): string => {
+  const str = String(value ?? '');
+  // If the value contains a comma, double-quote, or newline, wrap in quotes and escape inner quotes
+  if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+};
+
+// Build a shared filter object from query params — reused by getLeads and exportCSV
+const buildFilter = (query: Record<string, string>) => {
+  const { status, source, search } = query;
+  const filter: Record<string, any> = {};
+  if (status) filter.status = status;
+  if (source) filter.source = source;
+  if (search) {
+    filter.$or = [
+      { name: { $regex: search, $options: 'i' } },
+      { email: { $regex: search, $options: 'i' } },
+    ];
+  }
+  return filter;
+};
+
+export const createLead = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { name, email, status, source } = req.body;
 
@@ -21,11 +46,11 @@ export const createLead = async (req: AuthRequest, res: Response): Promise<void>
 
     res.status(201).json({ lead });
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    next(err);
   }
 };
 
-export const getLeads = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getLeads = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const {
       status,
@@ -36,17 +61,7 @@ export const getLeads = async (req: AuthRequest, res: Response): Promise<void> =
       limit = '10',
     } = req.query as Record<string, string>;
 
-    const filter: Record<string, any> = {};
-
-    if (status) filter.status = status;
-    if (source) filter.source = source;
-    if (search) {
-      filter.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
-      ];
-    }
-
+    const filter = buildFilter({ status, source, search });
     const sort = sortBy === 'oldest' ? 1 : -1;
     const pageNum = parseInt(page);
     const limitNum = parseInt(limit);
@@ -67,11 +82,11 @@ export const getLeads = async (req: AuthRequest, res: Response): Promise<void> =
       },
     });
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    next(err);
   }
 };
 
-export const getLead = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getLead = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const lead = await Lead.findById(req.params.id);
     if (!lead) {
@@ -80,11 +95,11 @@ export const getLead = async (req: AuthRequest, res: Response): Promise<void> =>
     }
     res.status(200).json({ lead });
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    next(err);
   }
 };
 
-export const updateLead = async (req: AuthRequest, res: Response): Promise<void> => {
+export const updateLead = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const lead = await Lead.findByIdAndUpdate(
       req.params.id,
@@ -99,11 +114,11 @@ export const updateLead = async (req: AuthRequest, res: Response): Promise<void>
 
     res.status(200).json({ lead });
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    next(err);
   }
 };
 
-export const deleteLead = async (req: AuthRequest, res: Response): Promise<void> => {
+export const deleteLead = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
     const lead = await Lead.findByIdAndDelete(req.params.id);
     if (!lead) {
@@ -112,35 +127,41 @@ export const deleteLead = async (req: AuthRequest, res: Response): Promise<void>
     }
     res.status(200).json({ message: 'Lead deleted' });
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    next(err);
   }
 };
 
-export const exportCSV = async (req: AuthRequest, res: Response): Promise<void> => {
+export const exportCSV = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const leads = await Lead.find({});
+    // Respect active filters so export matches what the user sees
+    const { status, source, search } = req.query as Record<string, string>;
+    const filter = buildFilter({ status, source, search });
+
+    const leads = await Lead.find(filter).sort({ createdAt: -1 });
 
     const headers = ['Name', 'Email', 'Status', 'Source', 'Created At'];
     const rows = leads.map((l) => [
-      l.name,
-      l.email,
-      l.status,
-      l.source,
-      new Date(l.createdAt as Date).toLocaleDateString(),
+      csvCell(l.name),
+      csvCell(l.email),
+      csvCell(l.status),
+      csvCell(l.source),
+      csvCell(new Date(l.createdAt as Date).toLocaleDateString('en-GB')),
     ]);
 
-    const csv = [headers, ...rows].map((r) => r.join(',')).join('\n');
+    const csv = [headers.map(csvCell), ...rows].map((r) => r.join(',')).join('\n');
+    const csvBuffer = Buffer.from(csv, 'utf-8');
 
-    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', 'attachment; filename=leads.csv');
-    res.status(200).send(csv);
+    res.setHeader('Content-Length', csvBuffer.length);
+    res.status(200).send(csvBuffer);
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    next(err);
   }
 };
 
-// public endpoint — no auth, leads come from the homepage contact form
-export const submitLead = async (req: Request, res: Response): Promise<void> => {
+// Public endpoint — no auth, leads come from the homepage contact form
+export const submitLead = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { name, email, message } = req.body;
 
@@ -149,8 +170,7 @@ export const submitLead = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    // system user id placeholder — public leads have no createdBy user
-    // we use a hardcoded ObjectId-like value to satisfy the schema
+    // System-level sentinel ObjectId for public leads (no authenticated user)
     const { Types } = await import('mongoose');
     const systemId = new Types.ObjectId('000000000000000000000000');
 
@@ -165,6 +185,6 @@ export const submitLead = async (req: Request, res: Response): Promise<void> => 
 
     res.status(201).json({ message: 'Thanks! We will be in touch soon.', lead });
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    next(err);
   }
 };

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { ThemeToggle } from '../ui/ThemeToggle';
 
 const getInitials = (name: string): string => {
   const parts = name.trim().split(/\s+/);
@@ -30,7 +31,7 @@ export const HomeNav = () => {
       className="sticky top-0 z-40"
       style={{
         borderBottom: '1px solid var(--border)',
-        background: 'rgba(8,8,8,0.9)',
+        background: 'color-mix(in srgb, var(--bg-base) 90%, transparent)',
         backdropFilter: 'blur(12px)',
       }}
     >
@@ -45,7 +46,7 @@ export const HomeNav = () => {
           <span className="text-sm font-semibold tracking-tight">GigFlow</span>
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
           {['#about', '#how-it-works', '#contact'].map((href) => (
             <a
               key={href}
@@ -57,17 +58,17 @@ export const HomeNav = () => {
           ))}
           <div className="w-px h-4 bg-[var(--border)]" />
 
+          <ThemeToggle />
+
           {/* Auth-aware right side */}
           {!user ? (
-            // Not logged in — show Sign in button
             <Link
               to="/login"
-              className="text-xs px-3 py-1.5 rounded-lg bg-[var(--text-primary)] text-[var(--bg-base)] font-semibold hover:bg-white cursor-pointer transition-colors"
+              className="text-xs px-3 py-1.5 rounded-lg bg-[var(--text-primary)] text-[var(--bg-base)] font-semibold hover:bg-white dark:hover:bg-[var(--amber)] cursor-pointer transition-colors"
             >
               Sign in
             </Link>
           ) : user.role === 'customer' ? (
-            // Customer — show avatar dropdown
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen((o) => !o)}
@@ -87,7 +88,6 @@ export const HomeNav = () => {
                     boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
                   }}
                 >
-                  {/* User info */}
                   <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--border)' }}>
                     <p className="text-sm font-semibold text-[var(--text-primary)] truncate">{user.name}</p>
                     <p className="text-xs text-[var(--text-muted)] truncate mt-0.5">{user.email}</p>
@@ -95,8 +95,6 @@ export const HomeNav = () => {
                       You're logged in. New features coming soon.
                     </p>
                   </div>
-
-                  {/* Sign out */}
                   <button
                     onClick={() => { setDropdownOpen(false); logout(); }}
                     className="w-full text-left px-4 py-2.5 text-xs text-[var(--text-muted)] hover:text-red-400 hover:bg-[var(--red-dim)] cursor-pointer transition-all"
@@ -107,10 +105,9 @@ export const HomeNav = () => {
               )}
             </div>
           ) : (
-            // Admin or Sales — show Dashboard link
             <Link
               to="/dashboard"
-              className="text-xs px-3 py-1.5 rounded-lg bg-[var(--text-primary)] text-[var(--bg-base)] font-semibold hover:bg-white cursor-pointer transition-colors"
+              className="text-xs px-3 py-1.5 rounded-lg bg-[var(--text-primary)] text-[var(--bg-base)] font-semibold hover:bg-white dark:hover:bg-[var(--amber)] cursor-pointer transition-colors"
             >
               Dashboard →
             </Link>

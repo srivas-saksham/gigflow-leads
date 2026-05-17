@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { RoleBadge } from '../ui/Badge';
+import { ThemeToggle } from '../ui/ThemeToggle';
 import api from '../../utils/api';
 
 const useClock = () => {
@@ -37,7 +38,7 @@ export const Navbar = () => {
       className="sticky top-0 z-40 flex items-center justify-between px-6 h-12"
       style={{
         borderBottom: '1px solid var(--border)',
-        background: 'rgba(8, 8, 8, 0.56)',
+        background: 'color-mix(in srgb, var(--bg-base) 85%, transparent)',
         backdropFilter: 'blur(12px)',
       }}
     >
@@ -81,9 +82,11 @@ export const Navbar = () => {
         </div>
       </div>
 
-      {/* Right — user info + sign out */}
+      {/* Right — theme toggle + user info + sign out */}
       {user && (
         <div className="flex items-center gap-3">
+          <ThemeToggle />
+          <div className="w-px h-4 bg-[var(--border)]" />
           <div className="flex items-center gap-2">
             <span className="text-xs text-[var(--text-secondary)]">{user.name}</span>
             <RoleBadge role={user.role} />
