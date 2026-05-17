@@ -5,6 +5,7 @@ import { RoleBadge } from '../ui/Badge';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import { House, LogOut } from 'lucide-react';
 import api from '../../utils/api';
+import { useLeadStats } from '../../context/LeadStatsContext';
 
 const useClock = () => {
   const [time, setTime] = useState(new Date());
@@ -17,12 +18,15 @@ const useClock = () => {
 
 const useOpenLeads = () => {
   const [count, setCount] = useState<number | null>(null);
+  const { statsVersion } = useLeadStats();
+
   useEffect(() => {
     api
       .get('/api/leads?status=new&limit=1')
       .then((res) => setCount(res.data.pagination.total))
       .catch(() => setCount(null));
-  }, []);
+  }, [statsVersion]); // re-runs on every status change
+
   return count;
 };
 

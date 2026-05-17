@@ -9,7 +9,7 @@ interface LeadFiltersBarProps {
 
 const SearchIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-    <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+    <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" />
   </svg>
 );
 
@@ -28,9 +28,9 @@ const selectStyle = {
 };
 
 export const LeadFiltersBar = ({ searchInput, onSearchChange, filters, onFilterChange }: LeadFiltersBarProps) => (
-  <div className="flex flex-wrap items-center gap-2">
-    {/* Search */}
-    <div className="relative">
+  <div className="flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center">
+    {/* Search — full width on mobile */}
+    <div className="relative w-full md:w-auto">
       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]">
         <SearchIcon />
       </span>
@@ -40,51 +40,51 @@ export const LeadFiltersBar = ({ searchInput, onSearchChange, filters, onFilterC
         onChange={(e) => onSearchChange(e.target.value)}
         placeholder="Search leads..."
         className={`
-          bg-[var(--bg-surface)] border border-[var(--border)]
+          w-full md:w-52 bg-[var(--bg-surface)] border border-[var(--border)]
           text-[var(--text-primary)] placeholder-[var(--text-muted)]
-          rounded-lg pl-8 pr-4 py-2 text-xs w-52
+          rounded-lg pl-8 pr-4 py-2 text-xs
           hover:border-[var(--border-hover)] focus:outline-none focus:border-[var(--amber)]
           transition-all duration-150
         `}
       />
     </div>
 
-    {/* Status */}
-    <select
-      value={filters.status}
-      onChange={(e) => onFilterChange({ status: e.target.value, page: 1 })}
-      className={selectClass}
-      style={selectStyle}
-    >
-      <option value="">All status</option>
-      <option value="new">New</option>
-      <option value="contacted">Contacted</option>
-      <option value="qualified">Qualified</option>
-      <option value="lost">Lost</option>
-    </select>
+    {/* Selects — row on mobile, inline on desktop */}
+    <div className="grid grid-cols-3 gap-2 md:contents">
+      <select
+        value={filters.status}
+        onChange={(e) => onFilterChange({ status: e.target.value, page: 1 })}
+        className={selectClass}
+        style={selectStyle}
+      >
+        <option value="">All status</option>
+        <option value="new">New</option>
+        <option value="contacted">Contacted</option>
+        <option value="qualified">Qualified</option>
+        <option value="lost">Lost</option>
+      </select>
 
-    {/* Source */}
-    <select
-      value={filters.source}
-      onChange={(e) => onFilterChange({ source: e.target.value, page: 1 })}
-      className={selectClass}
-      style={selectStyle}
-    >
-      <option value="">All sources</option>
-      <option value="website">Website</option>
-      <option value="instagram">Instagram</option>
-      <option value="referral">Referral</option>
-    </select>
+      <select
+        value={filters.source}
+        onChange={(e) => onFilterChange({ source: e.target.value, page: 1 })}
+        className={selectClass}
+        style={selectStyle}
+      >
+        <option value="">All sources</option>
+        <option value="website">Website</option>
+        <option value="instagram">Instagram</option>
+        <option value="referral">Referral</option>
+      </select>
 
-    {/* Sort */}
-    <select
-      value={filters.sortBy}
-      onChange={(e) => onFilterChange({ sortBy: e.target.value as 'latest' | 'oldest', page: 1 })}
-      className={selectClass}
-      style={selectStyle}
-    >
-      <option value="latest">Latest</option>
-      <option value="oldest">Oldest</option>
-    </select>
+      <select
+        value={filters.sortBy}
+        onChange={(e) => onFilterChange({ sortBy: e.target.value as 'latest' | 'oldest', page: 1 })}
+        className={selectClass}
+        style={selectStyle}
+      >
+        <option value="latest">Latest</option>
+        <option value="oldest">Oldest</option>
+      </select>
+    </div>
   </div>
 );
