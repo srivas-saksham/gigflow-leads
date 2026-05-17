@@ -80,30 +80,21 @@ export const HeroSection = () => (
           <div className="flex items-center gap-3 flex-wrap mb-10">
             <a
               href="#contact"
-              className="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all hover:brightness-110"
-              style={{
-                background: 'var(--amber)',
-                color: 'var(--bg-base)',
-                textDecoration: 'none',
-              }}
+              className="px-5 py-2.5 rounded-lg text-sm font-semibold transition-all bg-[var(--amber)] text-[var(--bg-base)] hover:bg-black dark:hover:bg-[var(--amber-selection)]"
             >
               Get in touch
             </a>
+
             <Link
               to="/register"
-              className="px-5 py-2.5 rounded-lg text-sm transition-colors"
-              style={{
-                border: '1px solid var(--border)',
-                color: 'var(--text-secondary)',
-                textDecoration: 'none',
-              }}
+              className="px-5 py-2.5 rounded-lg text-sm transition-all border border-[var(--border)] text-[var(--text-secondary)] no-underline hover:border-[var(--amber)] hover:shadow-[0_0_0_2px_var(--amber-border),0_0_12px_var(--amber-dim)]"
             >
               Create account →
             </Link>
+
             <a
               href="#about"
-              className="px-5 py-2.5 text-sm transition-colors"
-              style={{ color: 'var(--text-muted)', textDecoration: 'none' }}
+              className="px-5 py-2.5 text-sm transition-colors text-[var(--text-muted)] no-underline hover:text-[var(--amber)]"
             >
               Read the brief ↓
             </a>

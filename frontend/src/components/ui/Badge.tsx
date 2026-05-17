@@ -35,13 +35,13 @@ export const SourceBadge = ({ source }: SourceBadgeProps) => {
   );
 };
 
-interface RoleBadgeProps { role: 'admin' | 'sales' | 'customer' }
-export const RoleBadge = ({ role }: RoleBadgeProps) => (
+interface RoleBadgeProps { role: 'admin' | 'sales' | 'customer'; compact?: boolean }
+export const RoleBadge = ({ role, compact = false }: RoleBadgeProps) => (
   <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold border mono tracking-widest uppercase ${
     role === 'admin'
       ? 'bg-[var(--amber-dim)] text-amber-400 border-[var(--amber-border)]'
       : 'bg-[var(--bg-raised)] text-[var(--text-muted)] border-[var(--border)]'
   }`}>
-    {role}
+    {compact ? role[0] : role}
   </span>
 );

@@ -9,12 +9,17 @@ const getInitials = (name: string): string => {
   return parts[0][0].toUpperCase();
 };
 
+const navLinks = [
+  { href: '#about', label: 'About' },
+  { href: '#how-it-works', label: 'How it works' },
+  { href: '#contact', label: 'Contact' },
+];
+
 export const HomeNav = () => {
   const { user, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on outside click
   useEffect(() => {
     if (!dropdownOpen) return;
     const handler = (e: MouseEvent) => {
@@ -35,36 +40,43 @@ export const HomeNav = () => {
         backdropFilter: 'blur(12px)',
       }}
     >
-      <div className="max-w-7xl mx-auto px-6 h-12 flex items-center justify-between">
+      {/* ── Row 1: Branding + Right actions ── */}
+      <div className="max-w-7xl mx-auto px-4 md:px-6 h-12 flex items-center justify-between">
+
+        {/* Wordmark */}
         <div className="flex items-center gap-2">
           <span className="w-5 h-5 rounded-md bg-[var(--amber)] flex items-center justify-center shrink-0">
             <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
-              <circle cx="5" cy="5" r="3" fill="#080808"/>
-              <circle cx="5" cy="5" r="1" fill="#080808"/>
+              <circle cx="5" cy="5" r="3" fill="#080808" />
+              <circle cx="5" cy="5" r="1" fill="#080808" />
             </svg>
           </span>
-          <span className="text-sm font-semibold tracking-tight">GigFlow</span>
+          <span className="text-sm font-semibold tracking-tight text-[var(--text-primary)]">GigFlow</span>
         </div>
 
-        <div className="flex items-center gap-4">
-          {['#about', '#how-it-works', '#contact'].map((href) => (
+        {/* Desktop nav links */}
+        <div className="hidden md:flex items-center gap-4">
+          {navLinks.map(({ href, label }) => (
             <a
               key={href}
               href={href}
-              className="text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors capitalize"
+              className="text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
             >
-              {href.replace('#', '').replace('-', ' ')}
+              {label}
             </a>
           ))}
+        </div>
+
+        {/* Right: theme toggle + auth */}
+        <div className="flex items-center gap-3">
+          <div className="hidden md:block w-px h-4 bg-[var(--border)]" />
+          <ThemeToggle />
           <div className="w-px h-4 bg-[var(--border)]" />
 
-          <ThemeToggle />
-
-          {/* Auth-aware right side */}
           {!user ? (
             <Link
               to="/login"
-              className="text-xs px-3 py-1.5 rounded-lg bg-[var(--text-primary)] text-[var(--bg-base)] font-semibold hover:bg-white dark:hover:bg-[var(--amber)] cursor-pointer transition-colors"
+              className="text-xs px-3 py-1.5 rounded-lg font-semibold transition-colors bg-[var(--text-primary)] text-[var(--bg-base)] hover:bg-white dark:hover:bg-[var(--amber)]"
             >
               Sign in
             </Link>
@@ -107,12 +119,29 @@ export const HomeNav = () => {
           ) : (
             <Link
               to="/dashboard"
-              className="text-xs px-3 py-1.5 rounded-lg bg-[var(--text-primary)] text-[var(--bg-base)] font-semibold hover:bg-white dark:hover:bg-[var(--amber)] cursor-pointer transition-colors"
+              className="text-xs px-3 py-1.5 rounded-lg font-semibold transition-colors bg-[var(--text-primary)] text-[var(--bg-base)] hover:bg-white dark:hover:bg-[var(--amber)]"
             >
               Dashboard →
             </Link>
           )}
         </div>
+      </div>
+
+      {/* ── Row 2: Nav links — mobile only ── */}
+      <div
+        className="flex md:hidden items-center gap-2 px-4 py-2"
+        style={{ borderTop: '1px solid var(--border)' }}
+      >
+        {navLinks.map(({ href, label }) => (
+          <a
+            key={href}
+            href={href}
+            className="flex-1 text-center text-[11px] font-medium px-2 py-1.5 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+            style={{ border: '1px solid var(--border)' }}
+          >
+            {label}
+          </a>
+        ))}
       </div>
     </nav>
   );
