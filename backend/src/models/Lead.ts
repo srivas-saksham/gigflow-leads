@@ -1,3 +1,4 @@
+// backend/src/models/Lead.ts
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface ILead extends Document {
@@ -6,6 +7,7 @@ export interface ILead extends Document {
   status: 'new' | 'contacted' | 'qualified' | 'lost';
   source: 'website' | 'instagram' | 'referral';
   createdBy: mongoose.Types.ObjectId;
+  notes?: string;
   createdAt: Date;
 }
 
@@ -36,6 +38,10 @@ const leadSchema = new Schema<ILead>(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
+    },
+    notes: {
+      type: String,
+      trim: true,
     },
   },
   { timestamps: true }

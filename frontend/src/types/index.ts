@@ -1,3 +1,4 @@
+// frontend/src/types/index.ts
 export interface User {
   id: string;
   name: string;
@@ -12,6 +13,7 @@ export interface Lead {
   status: 'new' | 'contacted' | 'qualified' | 'lost';
   source: 'website' | 'instagram' | 'referral';
   createdBy: string;
+  notes?: string;
   createdAt: string;
   updatedAt: string;
 }
