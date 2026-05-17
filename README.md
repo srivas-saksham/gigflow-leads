@@ -6,6 +6,9 @@
 
 A full-stack lead management application built as a ServiceHive internship assignment. Built with the MERN stack, fully typed in TypeScript end-to-end.
 
+Seed Email: saksham@gigflow.admin
+Seed Pass: admin@gigflow
+
 ## Tech Stack
 
 | Layer | Technology |
