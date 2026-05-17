@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap');
 
 :root {
   --bg-base:      #080808;
@@ -27,11 +26,8 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-}
-
-html {
   scroll-behavior: smooth;
-  scroll-padding-top: 48px; /* matches your h-12 navbar */
+  scroll-padding-top: 48px;
 }
 
 body {
